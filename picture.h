@@ -13,6 +13,7 @@ public:
     SDL_Texture*    getTexture() const;
     int             getW() const;
     int             getH() const;
+    void            free();
 private:
     SDL_Texture *_texture;
     int         _w;

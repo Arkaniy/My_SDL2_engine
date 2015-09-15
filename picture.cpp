@@ -9,6 +9,7 @@ Picture::Picture() {
 }
 
 void Picture::load(std::string name) {
+    free();
     SDL_Renderer *renderer = GfxEngine::getInstanse().getRenderer();
     SDL_Surface *loadedSurface = IMG_Load(name.c_str());
     if (loadedSurface == NULL) {
@@ -28,6 +29,7 @@ void Picture::load(std::string name) {
 }
 
 void Picture::loadFromText(TTF_Font *font, std::string text, SDL_Color color) {
+    free();
     SDL_Renderer *renderer = GfxEngine::getInstanse().getRenderer();
     SDL_Surface *loadedSurface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (loadedSurface == NULL) {
@@ -55,4 +57,12 @@ int Picture::getW() const {
 
 int Picture::getH() const {
     return _h;
+}
+
+void Picture::free() {
+    if (_texture != nullptr) {
+        SDL_DestroyTexture(_texture);
+        _w = 0;
+        _h = 0;
+    }
 }

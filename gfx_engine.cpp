@@ -6,7 +6,6 @@
 GfxEngine::GfxEngine() {
     _renderer   = nullptr;
     _window     = nullptr;
-    _font       = nullptr;
 }
 
 GfxEngine& GfxEngine::getInstanse() {
@@ -42,7 +41,6 @@ bool GfxEngine::init() {
 }
 
 void GfxEngine::close() {
-    TTF_CloseFont(_font);
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
 

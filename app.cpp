@@ -1,7 +1,8 @@
 #include "app.h"
 #include "gfx_engine.h"
 #include "resourcesmanager.h"
-#include <sstream>
+
+#include "screenmenu.h"
 
 App::App() {
     _run = true;
@@ -9,21 +10,49 @@ App::App() {
 
 
 int App::execute() {
-    GfxEngine& engine = GfxEngine::getInstanse();
-    engine.init();
-    ResourcesManager::getInstance().loadResources();
-    SDL_Event event;
+    initVideo();
+    loadResources();
 
-    while (_run) {
-        engine.startFrame();
+    //SDL_Delay(400);
+    setScreenWait();
+    setScreenWait();
+    SDL_Delay(500);
 
-        engine.endFrame();
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                _run = false;
-            }
+    _nextScreen = SS_Menu;
+    while (_nextScreen != SS_Quit) {
+        switch(_nextScreen) {
+        case SS_Menu:
+            setScreenMenu();
+            break;
         }
     }
-    engine.close();
+
+    setScreenWait();
+    SDL_Delay(500);
+
+    close();
     return 0;
+}
+
+void App::initVideo() {
+    GfxEngine::getInstanse().init();
+}
+
+void App::loadResources() {
+    ResourcesManager::getInstance().loadResources();
+}
+
+void App::close() {
+    ResourcesManager::getInstance().unload();
+    GfxEngine::getInstanse().close();
+}
+
+void App::setScreenMenu() {
+    ScreenMenu screenMenu;
+    _nextScreen = screenMenu.run();
+}
+
+void App::setScreenWait() {
+    ScreenWait screenWait;
+    screenWait.drawFrame();
 }

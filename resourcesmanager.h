@@ -9,6 +9,7 @@ class ResourcesManager {
 public:
     static ResourcesManager& getInstance();
     void loadResources();
+    void unload();
     void loadPicture(std::string name);
     void loadFont(std::string name);
     const Picture& getPicture(const std::string &name) const;

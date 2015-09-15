@@ -8,9 +8,19 @@ ResourcesManager& ResourcesManager::getInstance() {
 
 ResourcesManager::ResourcesManager() {}
 
+void ResourcesManager::unload() {
+    for (const std::pair<std::string, TTF_Font*> pair : _fonts) {
+        TTF_CloseFont(pair.second);
+    }
+    for (std::pair<std::string, Picture> pair : _pictures) {
+        pair.second.free();
+    }
+}
+
 void ResourcesManager::loadResources() {
     loadFont("resources/font.ttf");
     loadPicture("resources/bg_picture.png");
+    loadPicture("resources/bg_wait.png");
 }
 
 void ResourcesManager::loadFont(std::string name) {
