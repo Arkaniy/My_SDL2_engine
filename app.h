@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "enums.h"
+#include "screen.h"
 
 class App {
 public:
@@ -13,11 +14,25 @@ private:
     void loadResources();
     void close();
 
-    void setScreenMenu();
-    void setScreenWait();
+	template<typename ScreenType>
+	void setScreen();
+
 private:
-    bool _run;
     ScreenState _nextScreen;
 };
+
+template <>
+inline void App::setScreen<ScreenWait>() {
+	ScreenWait screen;
+	screen.init();
+	screen.drawFrame();
+}
+
+template <typename ScreenType>
+inline void App::setScreen() {
+	ScreenType screen;
+	screen.init();
+	_nextScreen = screen.run();
+}
 
 #endif // APP_H

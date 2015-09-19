@@ -3,35 +3,36 @@
 #include "resourcesmanager.h"
 
 #include "screenmenu.h"
+#include "screengame.h"
 
 App::App() {
-    _run = true;
-}
 
+}
 
 int App::execute() {
     initVideo();
     loadResources();
 
-    //SDL_Delay(400);
-    setScreenWait();
-    setScreenWait();
-    SDL_Delay(500);
-
     _nextScreen = SS_Menu;
     while (_nextScreen != SS_Quit) {
         switch(_nextScreen) {
+		case SS_Game:
+			setScreen<ScreenGame>();
+			break;
         case SS_Menu:
-            setScreenMenu();
+			setScreen<ScreenMenu>();
             break;
-        }
-    }
+		case SS_Credits:
+			setScreen<ScreenCredits>();
+			break;
+		}
+	}
 
-    setScreenWait();
-    SDL_Delay(500);
+	setScreen<ScreenWait>();
+	SDL_Delay(1000);
 
-    close();
-    return 0;
+	close();
+	return 0;
 }
 
 void App::initVideo() {
@@ -44,15 +45,5 @@ void App::loadResources() {
 
 void App::close() {
     ResourcesManager::getInstance().unload();
-    GfxEngine::getInstanse().close();
-}
-
-void App::setScreenMenu() {
-    ScreenMenu screenMenu;
-    _nextScreen = screenMenu.run();
-}
-
-void App::setScreenWait() {
-    ScreenWait screenWait;
-    screenWait.drawFrame();
+	GfxEngine::getInstanse().close();
 }
