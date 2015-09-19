@@ -2,7 +2,6 @@
 #define SCREENGAME_H
 
 #include "screen.h"
-#include "button.h"
 #include "game_ui.h"
 
 class ScreenGame : public Screen {
@@ -15,7 +14,6 @@ public:
 	void handleEvent(SDL_Event &event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
 private:
-	const Picture *_bg;
 	Game_UI _gameUi;
 };
 

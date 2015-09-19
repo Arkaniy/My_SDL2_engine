@@ -4,13 +4,8 @@
 #include "config.h"
 #include <iostream>
 
-ScreenGame::ScreenGame() {
-	_nextScreen = SS_TOTAL;
-	_bg = nullptr;
-}
-
-ScreenGame::~ScreenGame() {
-}
+ScreenGame::ScreenGame() {}
+ScreenGame::~ScreenGame() {}
 
 void ScreenGame::init() {
 	_bg = ResourcesManager::getInstance().getPicture("resources/bg_picture2.png");
@@ -29,7 +24,6 @@ void ScreenGame::tick() {
 
 void ScreenGame::handleEvent(SDL_Event &event) {
 	if (event.type == SDL_KEYDOWN) {
-		std::cout << "In game key event\n";
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			_nextScreen = SS_Menu;
 		}
@@ -43,8 +37,8 @@ void ScreenGame::handleEvent(SDL_Event &event) {
 void ScreenGame::handleWidgetEvent(WidgetEvent event) {
 	switch (event) {
 	case WE_Menu:
-		_nextScreen = SS_Menu;
 		std::cout << "Menu pressed\n";
+		_nextScreen = SS_Menu;
 		break;
 	default:
 		std::cout << "unknown event\n";
