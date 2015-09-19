@@ -5,7 +5,7 @@
 #include "config.h"
 #include <iostream>
 
-Screen::Screen() {
+Screen::Screen() : _fps(FpsCounter::getInstance()) {
 	_bg = nullptr;
     _nextScreen = SS_TOTAL;
 }
