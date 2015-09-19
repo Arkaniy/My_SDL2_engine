@@ -67,6 +67,10 @@ TextButton::TextButton() {
 	_text = "";
 }
 
+TextButton::~TextButton() {
+	_textPicture.free();
+}
+
 void TextButton::draw() const {
 	Button::draw();
 	if (_text != "") {

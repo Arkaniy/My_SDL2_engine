@@ -33,6 +33,7 @@ protected:
 class TextButton : public Button {
 public:
 	TextButton();
+	~TextButton();
 	void draw() const override;
 	void setText(std::string str);
 private:
