@@ -4,6 +4,8 @@
 
 Picture::Picture() {
     _texture    = nullptr;
+	_x			= 0;
+	_y			= 0;
     _w          = 0;
     _h          = 0;
 }
@@ -25,30 +27,35 @@ void Picture::load(std::string name) {
     }
     _w = loadedSurface->w;
     _h = loadedSurface->h;
-    SDL_FreeSurface(loadedSurface);
+	SDL_FreeSurface(loadedSurface);
 }
 
-void Picture::loadFromText(TTF_Font *font, std::string text, SDL_Color color) {
-    free();
-    SDL_Renderer *renderer = GfxEngine::getInstanse().getRenderer();
-    SDL_Surface *loadedSurface = TTF_RenderText_Solid(font, text.c_str(), color);
-    if (loadedSurface == NULL) {
-        Helper::logError("load from text");
-        return;
-    }
-    _texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-    if (_texture == nullptr) {
-        Helper::logError("create texture");
-        SDL_FreeSurface(loadedSurface);
-        return;
-    }
-    _w = loadedSurface->w;
-    _h = loadedSurface->h;
-    SDL_FreeSurface(loadedSurface);
+void Picture::setX(int x) {
+	_x = x;
+}
+
+void Picture::setY(int y) {
+	_y = y;
+}
+
+void Picture::setW(int w) {
+	_w = w;
+}
+
+void Picture::setH(int h) {
+	_h = h;
 }
 
 SDL_Texture *Picture::getTexture() const {
-    return _texture;
+	return _texture;
+}
+
+int Picture::getX() const {
+	return _x;
+}
+
+int Picture::getY() const {
+	return _y;
 }
 
 int Picture::getW() const {
@@ -65,4 +72,31 @@ void Picture::free() {
         _w = 0;
         _h = 0;
     }
+}
+
+TextPicture::TextPicture() {
+	_font = nullptr;
+}
+
+void TextPicture::loadFromText(std::string text, SDL_Color color) {
+	free();
+	SDL_Renderer *renderer = GfxEngine::getInstanse().getRenderer();
+	SDL_Surface *loadedSurface = TTF_RenderText_Solid(_font, text.c_str(), color);
+	if (loadedSurface == NULL) {
+		Helper::logError("load from text");
+		return;
+	}
+	_texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+	if (_texture == nullptr) {
+		Helper::logError("create texture");
+		SDL_FreeSurface(loadedSurface);
+		return;
+	}
+	_w = loadedSurface->w;
+	_h = loadedSurface->h;
+	SDL_FreeSurface(loadedSurface);
+}
+
+void TextPicture::setFont(TTF_Font *font) {
+	_font = font;
 }

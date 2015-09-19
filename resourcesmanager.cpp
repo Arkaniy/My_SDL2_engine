@@ -19,12 +19,16 @@ void ResourcesManager::unload() {
 
 void ResourcesManager::loadResources() {
     loadFont("resources/font.ttf");
+	loadFont("resources/font1.ttf");
     loadPicture("resources/bg_picture.png");
+	loadPicture("resources/bg_picture2.png");
     loadPicture("resources/bg_wait.png");
+	loadPicture("resources/button.png");
+	loadPicture("resources/button_pressed.png");
 }
 
 void ResourcesManager::loadFont(std::string name) {
-    TTF_Font *font = TTF_OpenFont(name.c_str(), 24);
+	TTF_Font *font = TTF_OpenFont(name.c_str(), 20);
     if (font == NULL) {
         Helper::logError("open font");
         return;
@@ -38,9 +42,9 @@ void ResourcesManager::loadPicture(std::string name) {
     _pictures[name] = pic;
 }
 
-const Picture& ResourcesManager::getPicture(const std::string &name) const {
+Picture *ResourcesManager::getPicture(const std::string &name) {
     auto it = _pictures.find(name);
-    return it->second;
+	return &it->second;
 }
 
 TTF_Font* ResourcesManager::getFont(const std::string &name) const {

@@ -9,15 +9,32 @@ class Picture {
 public:
     Picture();
     void            load(std::string name);
-    void            loadFromText(TTF_Font *font, std::string text, SDL_Color color);
+	void			setX(int x);
+	void			setY(int y);
+	void			setW(int w);
+	void			setH(int h);
+
     SDL_Texture*    getTexture() const;
-    int             getW() const;
-    int             getH() const;
+	int             getX() const;
+	int             getY() const;
+	int             getW() const;
+	int             getH() const;
     void            free();
-private:
+protected:
     SDL_Texture *_texture;
+	int			_x;
+	int			_y;
     int         _w;
     int         _h;
+};
+
+class TextPicture : public Picture {
+public:
+	TextPicture();
+	void loadFromText(std::string text, SDL_Color color);
+	void setFont(TTF_Font *font);
+private:
+	TTF_Font *_font;
 };
 
 #endif // PICTURE_H

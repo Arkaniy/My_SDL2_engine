@@ -12,7 +12,7 @@ public:
     void unload();
     void loadPicture(std::string name);
     void loadFont(std::string name);
-    const Picture& getPicture(const std::string &name) const;
+	Picture* getPicture(const std::string &name);
     TTF_Font* getFont(const std::string &name) const;
 private:
     ResourcesManager();

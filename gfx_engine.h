@@ -13,7 +13,7 @@ public:
 
     void                startFrame();
     void                endFrame();
-    void                draw(const Picture &picture, int x, int y, const SDL_Rect * const clip = nullptr);
+	void                draw(const Picture *picture, int x, int y, const SDL_Rect * const clip = nullptr);
 
     SDL_Renderer* getRenderer() const;
 private:
