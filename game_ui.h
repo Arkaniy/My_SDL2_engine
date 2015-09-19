@@ -12,7 +12,7 @@ public:
 	void handleEvent(SDL_Event& event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
 private:
-	std::vector<TextButton*> _buttons;
+	std::vector<TextButton> _buttons;
 };
 
 #endif // GAME_UI_H
