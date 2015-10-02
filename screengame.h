@@ -3,6 +3,8 @@
 
 #include "screen.h"
 #include "game_ui.h"
+#include "tilemap.h"
+#include "unit.h"
 
 class ScreenGame : public Screen {
 public:
@@ -14,7 +16,9 @@ public:
 	void handleEvent(SDL_Event &event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
 private:
-	Game_UI _gameUi;
+	TileMap				_tileMap;
+	Game_UI				_gameUi;
+	std::vector<Unit*>	_units;
 };
 
 #endif // SCREENGAME_H

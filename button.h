@@ -13,8 +13,8 @@ public:
 	void handleEvent(SDL_Event& event) override;
 
 	void setWidgetEvent(const WidgetEvent widgetEvent);
-	void setPictureActive(const std::string name);
-	void setPicturePressed(const std::string name);
+	void setPictureActive(const TilePicture tilePicture);
+	void setPicturePressed(const TilePicture tilePicture);
 	void setX(int x);
 	void setY(int y);
 
@@ -27,7 +27,6 @@ protected:
 	Picture		*_pictureNormal;
 	Picture		*_picturePressed;
 	Picture		*_pictureCurrent;
-	bool	    _isActive;
 };
 
 class TextButton : public Button {

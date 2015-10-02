@@ -1,22 +1,20 @@
 #include "button.h"
 #include "resourcesmanager.h"
-#include "gfx_engine.h"
 #include <iostream>
 #include "screen.h"
 
 Button::Button() {
-	_widgetEvent = WE_TOTAL;
+	_widgetEvent._baseEvent = BE_TOTAL;
 	_listener = nullptr;
     _x = 0;
     _y = 0;
 	_pictureNormal = nullptr;
 	_picturePressed = nullptr;
 	_pictureCurrent = nullptr;
-    _isActive = true;
 }
 
 void Button::draw() const {
-	GfxEngine::getInstanse().draw(_pictureCurrent, _x, _y);
+	_pictureCurrent->draw(_x, _y);
 }
 
 void Button::handleEvent(SDL_Event &event) {
@@ -37,13 +35,13 @@ void Button::setWidgetEvent(const WidgetEvent widgetEvent) {
 	_widgetEvent = widgetEvent;
 }
 
-void Button::setPictureActive(const std::string name) {
-	_pictureNormal = ResourcesManager::getInstance().getPicture(name);
+void Button::setPictureActive(const TilePicture tilePicture) {
+	_pictureNormal = ResourcesManager::getInstance().getPicture(tilePicture);
 	_pictureCurrent = _pictureNormal;
 }
 
-void Button::setPicturePressed(const std::string name) {
-	_picturePressed = ResourcesManager::getInstance().getPicture(name);
+void Button::setPicturePressed(const TilePicture tilePicture) {
+	_picturePressed = ResourcesManager::getInstance().getPicture(tilePicture);
 }
 
 void Button::setX(int x) {
@@ -74,8 +72,7 @@ TextButton::~TextButton() {
 void TextButton::draw() const {
 	Button::draw();
 	if (_text != "") {
-		GfxEngine::getInstanse().draw(&_textPicture, _x + getW() / 2 - _textPicture.getW() / 2,
-									  _y + getH() / 2 - _textPicture.getH() / 2);
+		_textPicture.draw(_x + getW() / 2 - _textPicture.getW() / 2, _y + getH() / 2 - _textPicture.getH() / 2);
 	}
 }
 

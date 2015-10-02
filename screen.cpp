@@ -39,12 +39,11 @@ ScreenWait::ScreenWait() {}
 ScreenWait::~ScreenWait() {}
 
 void ScreenWait::init() {
-    _bg = ResourcesManager::getInstance().getPicture("resources/bg_wait.png");
+	_bg = ResourcesManager::getInstance().getPicture(TP_BackgroundWait);
 }
 
 void ScreenWait::draw() const {
-    GfxEngine engine = GfxEngine::getInstanse();
-    engine.draw(_bg, 0, 0);
+	_bg->draw(0, 0);
 }
 void ScreenWait::tick() {}
 void ScreenWait::handleEvent(SDL_Event&) {}
@@ -60,15 +59,15 @@ ScreenCredits::~ScreenCredits() {
 }
 
 void ScreenCredits::init() {
-	_bg = ResourcesManager::getInstance().getPicture("resources/bg_picture.png");
+	_bg = ResourcesManager::getInstance().getPicture(TP_BackgroundMenu);
 
 	_back = new TextButton();
 	_back->setListener(this);
-	_back->setPictureActive("resources/button.png");
-	_back->setPicturePressed("resources/button_pressed.png");
+	_back->setPictureActive(TP_Button);
+	_back->setPicturePressed(TP_ButtonPressed);
 	_back->setX(15);
 	_back->setY(Config::WindowH - _back->getH() - 5);
-	_back->setWidgetEvent(WE_Menu);
+	_back->setWidgetEvent(BE_Menu);
 	_back->setText("Back");
 
 	_firstLine = new TextPicture();
@@ -81,10 +80,9 @@ void ScreenCredits::init() {
 }
 
 void ScreenCredits::draw() const {
-	GfxEngine engine = GfxEngine::getInstanse();
-	engine.draw(_bg, 0, 0);
-	engine.draw(_firstLine, Config::WindowW / 2 - _firstLine->getW() / 2, Config::WindowH / 2);
-	engine.draw(_secondLine, Config::WindowW / 2 - _secondLine->getW() / 2, Config::WindowH / 2 + _secondLine->getH());
+	_bg->draw(0, 0);
+	_firstLine->draw(Config::WindowW / 2 - _firstLine->getW() / 2, Config::WindowH / 2);
+	_secondLine->draw(Config::WindowW / 2 - _secondLine->getW() / 2, Config::WindowH / 2 + _secondLine->getH());
 	_back->draw();
 	_fps.draw();
 }
@@ -106,7 +104,7 @@ void ScreenCredits::handleEvent(SDL_Event &event) {
 }
 
 void ScreenCredits::handleWidgetEvent(WidgetEvent event) {
-	if (event == WE_Menu) {
+	if (event._baseEvent == BE_Menu) {
 		_nextScreen = SS_Menu;
 	} else {
 		std::cout << "unknown event";

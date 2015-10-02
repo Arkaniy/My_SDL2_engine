@@ -3,11 +3,16 @@
 #include "helper.h"
 
 Picture::Picture() {
+	_resource	= "";
     _texture    = nullptr;
-	_x			= 0;
-	_y			= 0;
+	_xOffset	= 0;
+	_yOffset	= 0;
     _w          = 0;
     _h          = 0;
+}
+
+void Picture::setResource(std::string resource) {
+	_resource = resource;
 }
 
 void Picture::load(std::string name) {
@@ -27,15 +32,24 @@ void Picture::load(std::string name) {
     }
     _w = loadedSurface->w;
     _h = loadedSurface->h;
+	_resource = name;
 	SDL_FreeSurface(loadedSurface);
 }
 
-void Picture::setX(int x) {
-	_x = x;
+void Picture::setXOffset(int x) {
+	_xOffset = x;
+	if (x != 0) {
+		_w = 64;
+		_h = 64;
+	}
 }
 
-void Picture::setY(int y) {
-	_y = y;
+void Picture::setYOffset(int y) {
+	_yOffset = y;
+	if (y != 0) {
+		_w = 64;
+		_h = 64;
+	}
 }
 
 void Picture::setW(int w) {
@@ -46,16 +60,12 @@ void Picture::setH(int h) {
 	_h = h;
 }
 
+std::string Picture::getResource() const {
+	return _resource;
+}
+
 SDL_Texture *Picture::getTexture() const {
 	return _texture;
-}
-
-int Picture::getX() const {
-	return _x;
-}
-
-int Picture::getY() const {
-	return _y;
 }
 
 int Picture::getW() const {
@@ -69,9 +79,16 @@ int Picture::getH() const {
 void Picture::free() {
     if (_texture != nullptr) {
         SDL_DestroyTexture(_texture);
+		_xOffset = 0;
+		_yOffset = 0;
         _w = 0;
         _h = 0;
-    }
+	}
+}
+
+void Picture::draw(int x, int y) const {
+	SDL_Rect clip = { _xOffset, _yOffset, _w, _h };
+	GfxEngine::getInstanse().draw(this, x, y, &clip);
 }
 
 TextPicture::TextPicture() {

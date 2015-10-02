@@ -5,7 +5,8 @@
 
 class Helper {
 public:
-    void static logError(const std::string text);
+	static void logError(const std::string text);
+	static int  random(int min, int max);
 };
 
 #endif // HELPER_H

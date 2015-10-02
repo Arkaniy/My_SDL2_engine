@@ -8,22 +8,24 @@
 class Picture {
 public:
     Picture();
-    void            load(std::string name);
-	void			setX(int x);
-	void			setY(int y);
+	void			setResource(std::string resource);
+	void            load(std::string name);
+	void			setXOffset(int x);
+	void			setYOffset(int y);
 	void			setW(int w);
 	void			setH(int h);
 
+	std::string		getResource() const;
     SDL_Texture*    getTexture() const;
-	int             getX() const;
-	int             getY() const;
 	int             getW() const;
 	int             getH() const;
     void            free();
+	void			draw(int x, int y) const;
 protected:
+	std::string _resource;
     SDL_Texture *_texture;
-	int			_x;
-	int			_y;
+	int			_xOffset;
+	int			_yOffset;
     int         _w;
     int         _h;
 };

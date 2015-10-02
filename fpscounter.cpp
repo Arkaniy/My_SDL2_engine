@@ -1,6 +1,5 @@
 #include "fpscounter.h"
 #include "resourcesmanager.h"
-#include "gfx_engine.h"
 #include <SDL2/SDL.h>
 #include <sstream>
 
@@ -8,8 +7,8 @@ FpsCounter::FpsCounter() {
     _currentFps     = 0;
     _currentFrame   = 0;
 	_text.setFont(ResourcesManager::getInstance().getFont("resources/font1.ttf"));
-	_text.setX(5);
-	_text.setY(5);
+	_text.setXOffset(5);
+	_text.setYOffset(5);
 }
 
 FpsCounter& FpsCounter::getInstance() {
@@ -18,7 +17,7 @@ FpsCounter& FpsCounter::getInstance() {
 }
 
 void FpsCounter::draw() const {
-	GfxEngine::getInstanse().draw(&_text, _text.getX(), _text.getY());
+	_text.draw(5, 5);
 }
 
 void FpsCounter::calculateFps() {
