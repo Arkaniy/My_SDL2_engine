@@ -5,9 +5,7 @@
 #include "screenmenu.h"
 #include "screengame.h"
 
-App::App() {
-
-}
+App::App() {}
 
 int App::execute() {
     initVideo();
@@ -16,20 +14,20 @@ int App::execute() {
     _nextScreen = SS_Menu;
     while (_nextScreen != SS_Quit) {
         switch(_nextScreen) {
-		case SS_Game:
-			setScreen<ScreenGame>();
-			break;
+	case SS_Game:
+		setScreen<ScreenGame>();
+		break;
         case SS_Menu:
-			setScreen<ScreenMenu>();
-            break;
-		case SS_Credits:
-			setScreen<ScreenCredits>();
-			break;
-		}
+		setScreen<ScreenMenu>();
+        	break;
+	case SS_Credits:
+		setScreen<ScreenCredits>();
+		break;
 	}
+    }
 
 	setScreen<ScreenWait>();
-	SDL_Delay(1000);
+	SDL_Delay(100);
 
 	close();
 	return 0;
