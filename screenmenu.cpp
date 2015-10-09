@@ -44,9 +44,7 @@ void ScreenMenu::draw() const {
 	_fps.draw();
 }
 
-void ScreenMenu::tick() {
-	_fps.calculateFps();
-}
+void ScreenMenu::tick() {}
 
 void ScreenMenu::handleEvent(SDL_Event &event) {
     if (event.type == SDL_KEYDOWN) {

@@ -10,11 +10,12 @@ void ScreenGame::init() {
 	//_bg = ResourcesManager::getInstance().getPicture();
 	_gameUi.setListener(this);
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 25; ++i) {
 		Unit* unit = new Unit();
 		unit->setTileMap(&_tileMap);
 		unit->initRandomCoordinates();
 		unit->setPicture(TP_Man);
+		unit->setAnimation(TA_ManLeft);
 		_units.push_back(unit);
 	}
 
@@ -29,7 +30,6 @@ void ScreenGame::draw() const {
 }
 
 void ScreenGame::tick() {
-	_fps.calculateFps();
 	_tileMap.tick();
 }
 

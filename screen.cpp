@@ -14,16 +14,28 @@ Screen::~Screen() {}
 
 ScreenState Screen::run() {
     SDL_Event event;
+	const int TICKS_PER_SECOND = 25;
+	const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+	const int MAX_FRAMESKIP = 5;
+	Uint32 next_game_tick = SDL_GetTicks();
 	while (_nextScreen == SS_TOTAL) {
-		tick();
-        drawFrame();		
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                _nextScreen = SS_Quit;
-			} else {
-                handleEvent(event);
-            }
-        }
+		int loops = 0;
+		while( SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
+			next_game_tick += SKIP_TICKS;
+			loops++;
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT) {
+					_nextScreen = SS_Quit;
+				} else {
+					handleEvent(event);
+				}
+			}
+			tick();
+		}
+		float interpolation = float( SDL_GetTicks() + SKIP_TICKS - next_game_tick )
+							   / float( SKIP_TICKS );
+		std::cout << interpolation << '\n';
+		drawFrame();
     }
     return _nextScreen;
 }
@@ -33,8 +45,10 @@ void Screen::drawFrame() const {
     engine.startFrame();
 	draw();
     engine.endFrame();
+	_fps.calculateFps();
 }
 
+// Screen wait
 ScreenWait::ScreenWait() {}
 ScreenWait::~ScreenWait() {}
 
@@ -49,7 +63,7 @@ void ScreenWait::tick() {}
 void ScreenWait::handleEvent(SDL_Event&) {}
 void ScreenWait::handleWidgetEvent(WidgetEvent) {}
 
-
+// Screen credits
 ScreenCredits::ScreenCredits() {}
 
 ScreenCredits::~ScreenCredits() {
@@ -66,7 +80,7 @@ void ScreenCredits::init() {
 	_back->setPictureActive(TP_Button);
 	_back->setPicturePressed(TP_ButtonPressed);
 	_back->setX(15);
-	_back->setY(Config::WindowH - _back->getH() - 5);
+	_back->setY(Config::WindowH - _back->getH() - 15);
 	_back->setWidgetEvent(BE_Menu);
 	_back->setText("Back");
 
@@ -87,9 +101,7 @@ void ScreenCredits::draw() const {
 	_fps.draw();
 }
 
-void ScreenCredits::tick() {
-	_fps.calculateFps();
-}
+void ScreenCredits::tick() {}
 
 void ScreenCredits::handleEvent(SDL_Event &event) {
 	if (event.type == SDL_KEYDOWN) {

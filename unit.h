@@ -13,6 +13,7 @@ public:
 	void move(int di, int dj);
 private:
 	TileMap *_tileMap;
+	bool	_isMoving;
 };
 
 #endif // UNIT_H

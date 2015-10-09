@@ -19,6 +19,7 @@ protected:
 	const Picture *_bg;
     ScreenState _nextScreen;
 	FpsCounter& _fps;
+
 };
 
 
