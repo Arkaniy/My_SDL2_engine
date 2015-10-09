@@ -16,5 +16,6 @@ struct WidgetEvent {
 
 enum TileType { TT_Passable, TT_Wall, TT_TOTAL};
 enum TilePicture { TP_BackgroundMenu, TP_BackgroundWait, TP_Button, TP_ButtonPressed, TP_Tile, TP_Man, TP_Man1, TP_Wall, TP_TOTAL };
+enum TileAnimation { TA_ManRight, TA_ManLeft };
 
 #endif // ENUMS_H

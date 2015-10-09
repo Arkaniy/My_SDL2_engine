@@ -15,7 +15,14 @@ void ResourcesManager::unload() {
     }
 	for (std::pair<TilePicture, Picture> pair : _pictures) {
         pair.second.free();
-    }
+		auto res = _pictures.find(pair.first);
+		while(res != _pictures.end()) {
+			res->second.setExist(false);
+			res = std::find_if(++res, _pictures.end(), [pair](std::pair<TilePicture, Picture> pair2){
+				return pair.second.getResource() == pair2.second.getResource();
+			});
+		}
+	}
 }
 
 void ResourcesManager::loadResources() {
@@ -27,8 +34,20 @@ void ResourcesManager::loadResources() {
 	loadPicture("resources/button_pressed.png", TP_ButtonPressed, 0, 0);
 	loadPicture("resources/tilemap.png", TP_Tile, 256, 128);
 	loadPicture("resources/tilemap.png", TP_Wall, 448,  64);
-	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man, 0, 128);
-	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man1, 0, 64);
+	loadPicture("resources/png/walkcycle/BODY_skeleton.png", TP_Man, 0, 128);
+	loadPicture("resources/png/walkcycle/BODY_skeleton.png", TP_Man1, 0, 64);
+	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManLeft, 9, 64);
+	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManRight, 9, 192);
+}
+
+void ResourcesManager::loadAnimation(std::string name, TileAnimation tileAnimation, int nFrames, int yOffset) {
+	Animation animation;
+	animation.setNFrame(nFrames);
+	Picture pic = *getPicture(name);
+	for (int i = 0; i < nFrames; ++i) {
+		animation.addFrame(pic, i * 64, yOffset);
+	}
+	_animations[tileAnimation] = animation;
 }
 
 void ResourcesManager::loadFont(std::string name) {
@@ -37,7 +56,7 @@ void ResourcesManager::loadFont(std::string name) {
         Helper::logError("open font");
         return;
     }
-    _fonts[name] = font;
+	_fonts[name] = font;
 }
 
 void ResourcesManager::loadPicture(std::string name, TilePicture tilePicture, int xOffset, int yOffset) {
@@ -50,6 +69,14 @@ void ResourcesManager::loadPicture(std::string name, TilePicture tilePicture, in
 	pic.setXOffset(xOffset);
 	pic.setYOffset(yOffset);
 	_pictures[tilePicture] = pic;
+}
+
+Animation *ResourcesManager::getAnimation(const TileAnimation tileAnimation) {
+	auto it = _animations.find(tileAnimation);
+	if (it == _animations.end()) {
+		return nullptr;
+	}
+	return &it->second;
 }
 
 Picture *ResourcesManager::getPicture(const TilePicture tilePicture) {

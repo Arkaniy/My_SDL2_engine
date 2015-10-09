@@ -21,6 +21,10 @@ void LandOverlay::setPicture(const TilePicture tilePicture) {
 	_picture = ResourcesManager::getInstance().getPicture(tilePicture);
 }
 
+void LandOverlay::setAnimation(const TileAnimation tileAnimation) {
+	_animation = ResourcesManager::getInstance().getAnimation(tileAnimation);
+}
+
 int LandOverlay::getI() const {
 	return _masterTile->getI();
 }

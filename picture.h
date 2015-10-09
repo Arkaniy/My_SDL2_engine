@@ -14,6 +14,7 @@ public:
 	void			setYOffset(int y);
 	void			setW(int w);
 	void			setH(int h);
+	void			setExist(bool exist);
 
 	std::string		getResource() const;
     SDL_Texture*    getTexture() const;
@@ -27,7 +28,9 @@ protected:
 	int			_xOffset;
 	int			_yOffset;
     int         _w;
-    int         _h;
+	int         _h;
+private:
+	bool		_exist;
 };
 
 class TextPicture : public Picture {

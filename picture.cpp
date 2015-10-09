@@ -8,7 +8,8 @@ Picture::Picture() {
 	_xOffset	= 0;
 	_yOffset	= 0;
     _w          = 0;
-    _h          = 0;
+	_h          = 0;
+	_exist		= true;
 }
 
 void Picture::setResource(std::string resource) {
@@ -60,6 +61,10 @@ void Picture::setH(int h) {
 	_h = h;
 }
 
+void Picture::setExist(bool exist) {
+	_exist = exist;
+}
+
 std::string Picture::getResource() const {
 	return _resource;
 }
@@ -77,12 +82,13 @@ int Picture::getH() const {
 }
 
 void Picture::free() {
-    if (_texture != nullptr) {
+	if (_texture != nullptr && _exist == true) {
         SDL_DestroyTexture(_texture);
 		_xOffset = 0;
 		_yOffset = 0;
         _w = 0;
-        _h = 0;
+		_h = 0;
+		_exist = false;
 	}
 }
 
