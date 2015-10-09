@@ -117,6 +117,7 @@ void TextPicture::loadFromText(std::string text, SDL_Color color) {
 	}
 	_w = loadedSurface->w;
 	_h = loadedSurface->h;
+	_exist = true;
 	SDL_FreeSurface(loadedSurface);
 }
 

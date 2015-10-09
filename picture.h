@@ -29,7 +29,6 @@ protected:
 	int			_yOffset;
     int         _w;
 	int         _h;
-private:
 	bool		_exist;
 };
 
