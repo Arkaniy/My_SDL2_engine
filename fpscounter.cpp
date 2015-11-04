@@ -34,3 +34,7 @@ void FpsCounter::calculateFps() {
 	ss << "FPS: " << _currentFps;
 	_text.loadFromText(ss.str(), {0xFF, 0xFF, 0xFF, 0xFF});
 }
+
+int FpsCounter::getFps() const {
+	return _currentFps;
+}

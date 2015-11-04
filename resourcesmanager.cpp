@@ -38,6 +38,10 @@ void ResourcesManager::loadResources() {
 	loadPicture("resources/png/walkcycle/BODY_skeleton.png", TP_Man1, 0, 64);
 	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManLeft, 9, 64);
 	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManRight, 9, 192);
+//	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man, 0, 128);
+//	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man1, 0, 64);
+//	loadAnimation("resources/png/walkcycle/BODY_male.png", TA_ManLeft, 9, 64);
+//	loadAnimation("resources/png/walkcycle/BODY_male.png", TA_ManRight, 9, 192);
 }
 
 void ResourcesManager::loadAnimation(std::string name, TileAnimation tileAnimation, int nFrames, int yOffset) {

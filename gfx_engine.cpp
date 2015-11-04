@@ -19,12 +19,12 @@ bool GfxEngine::init() {
         Helper::logError("init video");
         result = false;
     }
-	_window = SDL_CreateWindow("My window", 100, 100, Config::WindowW, Config::WindowH, SDL_WINDOW_SHOWN);
+	_window = SDL_CreateWindow("My window", 300, 50, Config::WindowW, Config::WindowH, SDL_WINDOW_SHOWN);
     if (_window == nullptr) {
         Helper::logError("create window");
         result = false;
     }
-	_renderer = SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/);
+	_renderer = SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (_renderer == nullptr) {
         Helper::logError("create render");
         result = false;

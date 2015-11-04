@@ -8,6 +8,7 @@ public:
 	static FpsCounter& getInstance();
 	void draw() const;
     void calculateFps();
+	int getFps() const;
 private:
 	FpsCounter();
 private:

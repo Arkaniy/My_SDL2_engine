@@ -44,9 +44,7 @@ void ScreenMenu::draw() const {
 	_fps.draw();
 }
 
-void ScreenMenu::tick() {}
-
-void ScreenMenu::handleEvent(SDL_Event &event) {
+bool ScreenMenu::handleEvent(SDL_Event &event) {
     if (event.type == SDL_KEYDOWN) {
         if (event.key.keysym.sym == SDLK_ESCAPE) {
             _nextScreen = SS_Quit;

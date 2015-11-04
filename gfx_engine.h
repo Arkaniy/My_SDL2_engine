@@ -16,9 +16,9 @@ public:
 	void                draw(const Picture *picture, int x, int y, const SDL_Rect * const clip = nullptr);
 
     SDL_Renderer* getRenderer() const;
-private:
+//private:
     GfxEngine();
-private:
+//private:
     SDL_Window      *_window;
     SDL_Renderer    *_renderer;
 };

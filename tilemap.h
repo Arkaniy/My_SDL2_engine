@@ -4,6 +4,7 @@
 #include "picture.h"
 #include <vector>
 #include "enums.h"
+#include "widget.h"
 
 class Unit;
 class LandOverlay;
@@ -19,11 +20,12 @@ public:
 	void		setX(int x);
 	void		setY(int y);
 	TileType	getTileType() const;
+	LandOverlay*getLandOverlay();
 	int			getI() const;
 	int			getJ() const;
 	int			getX() const;
 	int			getY() const;
-	void		draw(int di, int dj) const;
+	void		draw() const;
 private:
 	TileType	_tileType;
 	LandOverlay	*_landOverlay;
@@ -34,12 +36,13 @@ private:
 	int			_y;
 };
 
-class TileMap {
+class TileMap : public Widget {
 	friend class MapGenerator;
 public:
 	TileMap();
-	void draw() const;
-	void tick();
+	void draw() const override;
+	bool handleEvent(SDL_Event &event) override;
+	void update();
 	Tile *getTile(int i, int j);
 	Tile *getRandomTile();
 	bool isInRange(int i, int j) const;

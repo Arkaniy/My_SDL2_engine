@@ -5,6 +5,7 @@ enum ScreenState { SS_Game, SS_Menu, SS_Credits, SS_Quit, SS_TOTAL };
 
 enum BaseEvent { BE_NewGame, BE_Menu, BE_Credits, BE_Quit, BE_TOTAL };
 enum GameEvent { GE_TOTAL };
+
 struct WidgetEvent {
 	WidgetEvent() {}
 	WidgetEvent(BaseEvent baseEvent) { _baseEvent = baseEvent; }

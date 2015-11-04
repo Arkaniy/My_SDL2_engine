@@ -9,9 +9,11 @@ ScreenGame::~ScreenGame() {}
 void ScreenGame::init() {
 	//_bg = ResourcesManager::getInstance().getPicture();
 	_gameUi.setListener(this);
+	_tileMap.setListener(this);
 
 	for (int i = 0; i < 25; ++i) {
 		Unit* unit = new Unit();
+		unit->setListener(this);
 		unit->setTileMap(&_tileMap);
 		unit->initRandomCoordinates();
 		unit->setPicture(TP_Man);
@@ -29,22 +31,14 @@ void ScreenGame::draw() const {
 	_fps.draw();
 }
 
-void ScreenGame::tick() {
-	_tileMap.tick();
-}
-
-void ScreenGame::handleEvent(SDL_Event &event) {
-	if (event.type == SDL_KEYDOWN) {
+bool ScreenGame::handleEvent(SDL_Event &event) {
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			_nextScreen = SS_Menu;
 		} else {
-			_units[0]->handleEvent(event);
-		}
-	} else {
-		if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
 			_gameUi.handleEvent(event);
+			_units[0]->handleEvent(event);
+			_tileMap.handleEvent(event);
 		}
-	}
 }
 
 void ScreenGame::handleWidgetEvent(WidgetEvent event) {
@@ -61,4 +55,8 @@ void ScreenGame::handleWidgetEvent(WidgetEvent event) {
 		std::cout << "unknown event\n";
 		break;
 	}
+}
+
+void ScreenGame::update() {
+	_tileMap.update();
 }

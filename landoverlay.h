@@ -16,10 +16,14 @@ public:
 	int getJ() const;
 	int getX() const;
 	int getY() const;
+
+	void echo() const;
 protected:
 	Tile		*_masterTile;
 	Picture		*_picture;
 	Animation	*_animation;
+	int			_id;
+	static int	_countLandOverlay;
 };
 
 #endif // LANDOVERLAY_H

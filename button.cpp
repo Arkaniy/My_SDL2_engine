@@ -17,12 +17,12 @@ void Button::draw() const {
 	_pictureCurrent->draw(_x, _y);
 }
 
-void Button::handleEvent(SDL_Event &event) {
+bool Button::handleEvent(SDL_Event &event) {
 	if (event.button.x >= _x && event.button.x <= _x + _pictureNormal->getW() &&
 			event.button.y >= _y && event.button.y <= _y + _pictureNormal->getH()) {
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 			_pictureCurrent = _picturePressed;
-		} else if (event.type == SDL_MOUSEBUTTONUP) {
+		} else {
 			_pictureCurrent = _pictureNormal;
 			_listener->handleWidgetEvent(_widgetEvent);
 		}

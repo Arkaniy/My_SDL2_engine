@@ -10,7 +10,7 @@ class Button : public Widget {
 public:
     Button();
 	void draw() const override;
-	void handleEvent(SDL_Event& event) override;
+	bool handleEvent(SDL_Event& event) override;
 
 	void setWidgetEvent(const WidgetEvent widgetEvent);
 	void setPictureActive(const TilePicture tilePicture);

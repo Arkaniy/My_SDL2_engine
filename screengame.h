@@ -12,9 +12,9 @@ public:
 	~ScreenGame();
 	void init() override;
 	void draw() const override;
-	void tick() override;
-	void handleEvent(SDL_Event &event) override;
+	bool handleEvent(SDL_Event &event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
+	void update() override;
 private:
 	TileMap				_tileMap;
 	Game_UI				_gameUi;

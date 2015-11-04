@@ -1,9 +1,14 @@
 #include "landoverlay.h"
 #include "resourcesmanager.h"
+#include <iostream>
+
+int LandOverlay::_countLandOverlay = 0;
 
 LandOverlay::LandOverlay() {
 	_masterTile = nullptr;
 	_picture = nullptr;
+	_animation = nullptr;
+	_id = ++_countLandOverlay;
 }
 
 LandOverlay::~LandOverlay() {}
@@ -39,4 +44,8 @@ int LandOverlay::getX() const {
 
 int LandOverlay::getY() const {
 	return _masterTile->getY();
+}
+
+void LandOverlay::echo() const {
+	std::cout << "Hi, there is " << _id << '\n';
 }

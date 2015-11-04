@@ -12,6 +12,8 @@ Screen::Screen() : _fps(FpsCounter::getInstance()) {
 
 Screen::~Screen() {}
 
+void Screen::update() {}
+
 ScreenState Screen::run() {
     SDL_Event event;
 	const int TICKS_PER_SECOND = 25;
@@ -30,11 +32,8 @@ ScreenState Screen::run() {
 					handleEvent(event);
 				}
 			}
-			tick();
 		}
-		float interpolation = float( SDL_GetTicks() + SKIP_TICKS - next_game_tick )
-							   / float( SKIP_TICKS );
-		std::cout << interpolation << '\n';
+		update();
 		drawFrame();
     }
     return _nextScreen;
@@ -59,8 +58,7 @@ void ScreenWait::init() {
 void ScreenWait::draw() const {
 	_bg->draw(0, 0);
 }
-void ScreenWait::tick() {}
-void ScreenWait::handleEvent(SDL_Event&) {}
+bool ScreenWait::handleEvent(SDL_Event&) {}
 void ScreenWait::handleWidgetEvent(WidgetEvent) {}
 
 // Screen credits
@@ -101,9 +99,7 @@ void ScreenCredits::draw() const {
 	_fps.draw();
 }
 
-void ScreenCredits::tick() {}
-
-void ScreenCredits::handleEvent(SDL_Event &event) {
+bool ScreenCredits::handleEvent(SDL_Event &event) {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			_nextScreen = SS_Menu;

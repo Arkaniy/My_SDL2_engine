@@ -1,3 +1,4 @@
+#include <iostream>
 #include "tilemap.h"
 #include "resourcesmanager.h"
 #include "config.h"
@@ -6,6 +7,9 @@
 #include "unit.h"
 #include "mapgenerator.h"
 #include "helper.h"
+#include "fpscounter.h"
+#include "screen.h"
+#include "iomanip"
 
 Tile::Tile() {
 	_landOverlay = nullptr;
@@ -31,6 +35,8 @@ void Tile::setTileType(TileType tileType) {
 	case TT_Wall:
 		setPicture(TP_Wall);
 		break;
+	default:
+		_picture = nullptr;
 	}
 }
 
@@ -62,6 +68,10 @@ TileType Tile::getTileType() const {
 	return _tileType;
 }
 
+LandOverlay *Tile::getLandOverlay() {
+	return _landOverlay;
+}
+
 int Tile::getI() const {
 	return _i;
 }
@@ -79,11 +89,9 @@ int Tile::getY() const {
 }
 
 
-void Tile::draw(int di, int dj) const {
+void Tile::draw() const {
 	if (_picture != nullptr) {
-		int dx = (dj - di) * 32;
-		int dy = (dj + di) * 16;
-		_picture->draw(_x + dx, _y + dy);
+		_picture->draw(_x, _y);
 		if (_landOverlay != nullptr) {
 			_landOverlay->draw();
 		}
@@ -95,17 +103,15 @@ TileMap::TileMap() {
 	_Size = Config::SizeTileMap;
 	_tiles.resize(_Size);
 	int i = 0;
-	int centerX = Config::WindowW / 2 - 32;
-	int centerY = Config::WindowH / 2 - 32;
 	for (auto& subVector : _tiles) {
 		int j = 0;
 		subVector.resize(_Size);
 		for (Tile& tile : subVector) {
-			tile.setTileType(TT_TOTAL);
+			tile.setTileType(TT_Passable);
 			tile.setI(i);
 			tile.setJ(j);
-			tile.setX((j - i) * 32 + centerX);
-			tile.setY((i + j) * 16 + centerY);
+			tile.setX((j - i) * 32);
+			tile.setY((i + j) * 16);
 			++j;
 		}
 		++i;
@@ -114,48 +120,84 @@ TileMap::TileMap() {
 }
 
 void TileMap::draw() const {
-//	int I = _centerUnit->getI();
-//	int J = _centerUnit->getJ();
-//	for (int i = 0; i < _tiles.size(); ++i) {
-//		for (int j = 0; j < _tiles.size(); ++j) {
-//			int ii = i + I;
-//			int jj = j + J;
-//			if (isInRange(ii, jj)) {
-//				_tiles[ii][jj].draw(-I, -J);
-//			}
-//		}
-//	}
 	for (const auto& subVector : _tiles) {
 		for (const Tile& tile : subVector) {
-
-			tile.draw(0, 0);
+			tile.draw();
 		}
 	}
-//	int centerX = (_centerUnit->getI() - _centerUnit->getJ()) * 32;
-//	int centerY = (_centerUnit->getI() + _centerUnit->getJ()) * 16;
-//	for (int i = -5; i <= 5; ++i) {
-//		for (int j = -5; j <= 5; ++j) {
-//			if (isInRange(i + _centerUnit->getI(), j + _centerUnit->getJ())) {
+}
 
-//				//_tiles[i + _centerUnit->getI()][j + _centerUnit->getJ()].draw(0, 0);
-//				_tiles[i + _centerUnit->getI()][j + _centerUnit->getJ()].draw(-centerX, -centerY);
+
+#include <thread>
+bool TileMap::handleEvent(SDL_Event &event) {
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		int i = _centerUnit->getI() + (-2 * event.motion.x + Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
+		int j = _centerUnit->getJ() + ( 2 * event.motion.x - Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
+		if (isInRange(i, j)) {
+			Unit *lo = dynamic_cast<Unit*>(_tiles[i][j].getLandOverlay());
+			if (lo != nullptr) {
+				lo->echo();
+			}
+			else {
+				std::cout << "Nobody is here\n";
+				std::thread thr(&Unit::searchWay, _centerUnit, i, j);
+				thr.detach();
+			}
+		}
+	}
+}
+
+void TileMap::update() {
+
+//  TODO: soft moving
+
+//	static double start = 0;
+//	static int n = 1;
+//	//int fps = FpsCounter::getInstance().getFps();
+//	int fps = 60;
+//	float d = 0;
+//	float dx = 0;
+//	float dy = 0;
+//	if (start++ == fps / _centerUnit->getSpeed() || !_centerUnit->isMoving()) {
+//		start = 0;
+//		n = 1;
+//	} else {
+//		d = start / static_cast<double>(fps) * _centerUnit->getSpeed();
+
+//		std::cout << std::setw(3) << n++ << " -> " << std::setw(9) << 1 - d <<
+//				  "; " << _centerUnit->getX() << ", " << _centerUnit->getY() <<
+//				  "; " << _centerUnit->getI() << ", " << _centerUnit->getJ() << "\n";
+//		if (_centerUnit->getI() != _centerUnit->_oldI) { // 0
+//			if (_centerUnit->getI() < _centerUnit->_oldI) { // -1
+//				dx = 1;
+//				dy = -1;
+//			} else { // 1
+//				dx = -1;
+//				dy = 1;
+//			}
+//		} else {
+//			if (_centerUnit->getJ() < _centerUnit->_oldJ) {
+//				dx = -1;
+//				dy = -1;
+//			} else {
+//				dx = 1;
+//				dy = 1;
 //			}
 //		}
 //	}
-}
+//	dx *= 1.0 - d;
+//	dy *= 1.0 - d;
 
-void TileMap::tick() {
-	int i = 0;
-	int centerX = _centerUnit->getX() - Config::WindowW / 2 + 32;
-	int centerY = _centerUnit->getY() - Config::WindowH / 2 + 32;;
+	int dx = 0; // temporary value
+	int dy = 0; // until fix above
+
+	int centerX = _centerUnit->getX() - Config::WindowW / 2 + 32 - dx * 32;
+	int centerY = _centerUnit->getY() - Config::WindowH / 2 + 32 - dy * 16;
 	for (auto& subVector : _tiles) {
-		int j = 0;
 		for (Tile& tile : subVector) {
 			tile.setX(tile.getX() - centerX);
 			tile.setY(tile.getY() - centerY);
-			++j;
 		}
-		++i;
 	}
 }
 

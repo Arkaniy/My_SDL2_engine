@@ -12,14 +12,13 @@ public:
     Screen();
 	virtual ~Screen();
 	virtual void init() = 0;
-	virtual void tick() = 0;
+	virtual void update();
 	ScreenState run();
 	void drawFrame() const;
 protected:
 	const Picture *_bg;
     ScreenState _nextScreen;
 	FpsCounter& _fps;
-
 };
 
 
@@ -29,8 +28,7 @@ public:
 	~ScreenWait();
 	void init() override;
 	void draw() const override;
-	void tick() override;
-	void handleEvent(SDL_Event &event) override;
+	bool handleEvent(SDL_Event &event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
 };
 
@@ -41,8 +39,7 @@ public:
 	~ScreenCredits();
 	void init() override;
 	void draw() const override;
-	void tick() override;
-	void handleEvent(SDL_Event &event) override;
+	bool handleEvent(SDL_Event &event) override;
 	void handleWidgetEvent(WidgetEvent event) override;
 private:
 	TextButton *_back;
