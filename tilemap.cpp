@@ -4,7 +4,6 @@
 #include "config.h"
 #include <ctime>
 #include "landoverlay.h"
-#include "unit.h"
 #include "mapgenerator.h"
 #include "helper.h"
 #include "fpscounter.h"
@@ -130,21 +129,15 @@ void TileMap::draw() const {
 
 #include <thread>
 bool TileMap::handleEvent(SDL_Event &event) {
+	bool handled = false;
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
-		int i = _centerUnit->getI() + (-2 * event.motion.x + Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
-		int j = _centerUnit->getJ() + ( 2 * event.motion.x - Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
-		if (isInRange(i, j)) {
-			Unit *lo = dynamic_cast<Unit*>(_tiles[i][j].getLandOverlay());
-			if (lo != nullptr) {
-				lo->echo();
-			}
-			else {
-				std::cout << "Nobody is here\n";
-				std::thread thr(&Unit::searchWay, _centerUnit, i, j);
-				thr.detach();
-			}
-		}
+		//int i = _centerUnit->getI() + (-2 * event.motion.x + Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
+		//int j = _centerUnit->getJ() + ( 2 * event.motion.x - Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
+		int i = 0, j = 0;
+		std::cout << "Handled in" << i << ", " << j << std::endl;
+		handled = true;
 	}
+	return handled;
 }
 
 void TileMap::update() {
@@ -188,11 +181,12 @@ void TileMap::update() {
 //	dx *= 1.0 - d;
 //	dy *= 1.0 - d;
 
-	int dx = 0; // temporary value
-	int dy = 0; // until fix above
+//	int dx = 0; // temporary value
+//	int dy = 0; // until fix above
 
-	int centerX = _centerUnit->getX() - Config::WindowW / 2 + 32 - dx * 32;
-	int centerY = _centerUnit->getY() - Config::WindowH / 2 + 32 - dy * 16;
+//	int centerX = _centerUnit->getX() - Config::WindowW / 2 + 32 - dx * 32;
+//	int centerY = _centerUnit->getY() - Config::WindowH / 2 + 32 - dy * 16;
+	int centerX = 0, centerY = 0;
 	for (auto& subVector : _tiles) {
 		for (Tile& tile : subVector) {
 			tile.setX(tile.getX() - centerX);

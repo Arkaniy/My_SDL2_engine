@@ -58,7 +58,9 @@ void ScreenWait::init() {
 void ScreenWait::draw() const {
 	_bg->draw(0, 0);
 }
-bool ScreenWait::handleEvent(SDL_Event&) {}
+bool ScreenWait::handleEvent(SDL_Event&) {
+	return false;
+}
 void ScreenWait::handleWidgetEvent(WidgetEvent) {}
 
 // Screen credits

@@ -10,18 +10,6 @@ void ScreenGame::init() {
 	//_bg = ResourcesManager::getInstance().getPicture();
 	_gameUi.setListener(this);
 	_tileMap.setListener(this);
-
-	for (int i = 0; i < 25; ++i) {
-		Unit* unit = new Unit();
-		unit->setListener(this);
-		unit->setTileMap(&_tileMap);
-		unit->initRandomCoordinates();
-		unit->setPicture(TP_Man);
-		unit->setAnimation(TA_ManLeft);
-		_units.push_back(unit);
-	}
-
-	_tileMap.setCenterUnit(_units[0]);
 }
 
 void ScreenGame::draw() const {
@@ -36,7 +24,6 @@ bool ScreenGame::handleEvent(SDL_Event &event) {
 			_nextScreen = SS_Menu;
 		} else {
 			_gameUi.handleEvent(event);
-			_units[0]->handleEvent(event);
 			_tileMap.handleEvent(event);
 		}
 }

@@ -4,7 +4,6 @@
 #include "screen.h"
 #include "game_ui.h"
 #include "tilemap.h"
-#include "unit.h"
 
 class ScreenGame : public Screen {
 public:
@@ -18,7 +17,6 @@ public:
 private:
 	TileMap				_tileMap;
 	Game_UI				_gameUi;
-	std::vector<Unit*>	_units;
 };
 
 #endif // SCREENGAME_H

@@ -31,11 +31,16 @@ void Game_UI::draw() const {
 }
 
 bool Game_UI::handleEvent(SDL_Event &event) {
+	bool handled = false;
 	if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
 		for (TextButton& button : _textButtons) {
-			button.handleEvent(event);
+			if (button.handleEvent(event)) {
+				handled = true;
+				break;
+			}
 		}
 	}
+	return handled;
 }
 
 void Game_UI::handleWidgetEvent(WidgetEvent event) {

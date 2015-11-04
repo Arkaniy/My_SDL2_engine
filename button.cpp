@@ -18,8 +18,10 @@ void Button::draw() const {
 }
 
 bool Button::handleEvent(SDL_Event &event) {
+	bool handled = false;
 	if (event.button.x >= _x && event.button.x <= _x + _pictureNormal->getW() &&
 			event.button.y >= _y && event.button.y <= _y + _pictureNormal->getH()) {
+		handled = true;
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 			_pictureCurrent = _picturePressed;
 		} else {
@@ -29,6 +31,7 @@ bool Button::handleEvent(SDL_Event &event) {
 	} else {
 		_pictureCurrent = _pictureNormal;
 	}
+	return handled;
 }
 
 void Button::setWidgetEvent(const WidgetEvent widgetEvent) {
