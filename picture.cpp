@@ -8,7 +8,8 @@ Picture::Picture() {
 	_xOffset	= 0;
 	_yOffset	= 0;
     _w          = 0;
-    _h          = 0;
+	_h          = 0;
+	_exist		= true;
 }
 
 void Picture::setResource(std::string resource) {
@@ -23,7 +24,6 @@ void Picture::load(std::string name) {
         Helper::logError("load image");
         return;
     }
-    //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0x00, 0xFF));
     _texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     if (_texture == nullptr) {
         Helper::logError("create texture");
@@ -77,12 +77,13 @@ int Picture::getH() const {
 }
 
 void Picture::free() {
-    if (_texture != nullptr) {
+	if (_texture != nullptr && _exist == true) {
         SDL_DestroyTexture(_texture);
 		_xOffset = 0;
 		_yOffset = 0;
         _w = 0;
-        _h = 0;
+		_h = 0;
+		_exist = false;
 	}
 }
 
@@ -111,6 +112,7 @@ void TextPicture::loadFromText(std::string text, SDL_Color color) {
 	}
 	_w = loadedSurface->w;
 	_h = loadedSurface->h;
+	_exist = true;
 	SDL_FreeSurface(loadedSurface);
 }
 

@@ -1,3 +1,6 @@
 *.pro*
 *~
 uml.*
+TEST_*
+*.bmp
+*.png

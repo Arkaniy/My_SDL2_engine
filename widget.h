@@ -11,15 +11,13 @@ public:
 	virtual ~Widget();
 	virtual void draw() const = 0;
 	virtual void handleEvent(SDL_Event& event) = 0;
-
 	void setListener(Listener *listener);
 protected:
-	Listener *_listener;
+	Listener	*_listener;
 };
 
-class Listener : public Widget {
+class Listener {
 public:
-	Listener();
 	virtual ~Listener();
 	virtual void handleWidgetEvent(WidgetEvent event) = 0;
 };

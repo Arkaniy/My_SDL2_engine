@@ -1,30 +1,56 @@
 #include "screen.h"
+#include "fpscounter.h"
 #include "resourcesmanager.h"
 #include "gfx_engine.h"
-#include "button.h"
 #include "config.h"
 #include <iostream>
 
 Screen::Screen() : _fps(FpsCounter::getInstance()) {
-	_bg = nullptr;
     _nextScreen = SS_TOTAL;
 }
 
 Screen::~Screen() {}
 
+void Screen::update() {}
+
+void Screen::handleWidgetEvent(WidgetEvent widgetEvent) {
+	switch (widgetEvent._baseEvent) {
+	case BE_NewGame:
+		std::cout << "New Game pressed\n";
+		_nextScreen = SS_Game;
+		break;
+	case BE_Credits:
+		std::cout << "Credits pressed\n";
+		_nextScreen = SS_Credits;
+		break;
+	case BE_Menu:
+		std::cout << "Menu pressed\n";
+		_nextScreen = SS_Menu;
+		break;
+	case BE_Quit:
+		std::cout << "Quit pressed\n";
+		_nextScreen = SS_Quit;
+		break;
+	default:
+		std::cout << "unknown event\n";
+	}
+}
+
 ScreenState Screen::run() {
     SDL_Event event;
+
 	while (_nextScreen == SS_TOTAL) {
-		tick();
-        drawFrame();		
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                _nextScreen = SS_Quit;
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT) {
+				_nextScreen = SS_Quit;
 			} else {
-                handleEvent(event);
-            }
-        }
+				handleEvent(event);
+			}
+		}
+		update();
+		drawFrame();
     }
+
     return _nextScreen;
 }
 
@@ -32,9 +58,12 @@ void Screen::drawFrame() const {
     GfxEngine engine = GfxEngine::getInstanse();
     engine.startFrame();
 	draw();
+	_fps.draw();
     engine.endFrame();
+	_fps.calculateFps();
 }
 
+// Screen wait
 ScreenWait::ScreenWait() {}
 ScreenWait::~ScreenWait() {}
 
@@ -43,52 +72,38 @@ void ScreenWait::init() {
 }
 
 void ScreenWait::draw() const {
-	_bg->draw(0, 0);
+	_bg->draw();
 }
-void ScreenWait::tick() {}
+
 void ScreenWait::handleEvent(SDL_Event&) {}
-void ScreenWait::handleWidgetEvent(WidgetEvent) {}
 
-
+// Screen credits
 ScreenCredits::ScreenCredits() {}
-
-ScreenCredits::~ScreenCredits() {
-	delete _back;
-	delete _firstLine;
-	delete _secondLine;
-}
+ScreenCredits::~ScreenCredits() {}
 
 void ScreenCredits::init() {
 	_bg = ResourcesManager::getInstance().getPicture(TP_BackgroundMenu);
 
-	_back = new TextButton();
-	_back->setListener(this);
-	_back->setPictureActive(TP_Button);
-	_back->setPicturePressed(TP_ButtonPressed);
-	_back->setX(15);
-	_back->setY(Config::WindowH - _back->getH() - 5);
-	_back->setWidgetEvent(BE_Menu);
-	_back->setText("Back");
+	_back.setListener(this);
+	_back.setPictureActive(TP_Button);
+	_back.setPicturePressed(TP_ButtonPressed);
+	_back.setX(15);
+	_back.setY(Config::WindowH - _back.getH() - 15);
+	_back.setWidgetEvent(BE_Menu);
+	_back.setText("Back");
 
-	_firstLine = new TextPicture();
-	_firstLine->setFont(ResourcesManager::getInstance().getFont("resources/font.ttf"));
-	_firstLine->loadFromText("First long long long line", {255, 0, 0, 255});
+	_firstLine.setFont(ResourcesManager::getInstance().getFont(FC_Main));
+	_firstLine.loadFromText("First long long long line", {255, 0, 0, 255});
 
-	_secondLine = new TextPicture();
-	_secondLine->setFont(ResourcesManager::getInstance().getFont("resources/font.ttf"));
-	_secondLine->loadFromText("Another line", {255, 0, 0, 255});
+	_secondLine.setFont(ResourcesManager::getInstance().getFont(FC_Main));
+	_secondLine.loadFromText("Another line", {255, 0, 0, 255});
 }
 
 void ScreenCredits::draw() const {
-	_bg->draw(0, 0);
-	_firstLine->draw(Config::WindowW / 2 - _firstLine->getW() / 2, Config::WindowH / 2);
-	_secondLine->draw(Config::WindowW / 2 - _secondLine->getW() / 2, Config::WindowH / 2 + _secondLine->getH());
-	_back->draw();
-	_fps.draw();
-}
-
-void ScreenCredits::tick() {
-	_fps.calculateFps();
+	_bg->draw();
+	_firstLine.draw(Config::WindowW / 2 - _firstLine.getW() / 2, Config::WindowH / 2);
+	_secondLine.draw(Config::WindowW / 2 - _secondLine.getW() / 2, Config::WindowH / 2 + _secondLine.getH());
+	_back.draw();
 }
 
 void ScreenCredits::handleEvent(SDL_Event &event) {
@@ -98,15 +113,7 @@ void ScreenCredits::handleEvent(SDL_Event &event) {
 		}
 	} else {
 		if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
-			_back->handleEvent(event);
+			_back.handleEvent(event);
 		}
-	}
-}
-
-void ScreenCredits::handleWidgetEvent(WidgetEvent event) {
-	if (event._baseEvent == BE_Menu) {
-		_nextScreen = SS_Menu;
-	} else {
-		std::cout << "unknown event";
 	}
 }

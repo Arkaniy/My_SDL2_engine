@@ -10,5 +10,4 @@ void Widget::setListener(Listener *listener) {
 	_listener = listener;
 }
 
-Listener::Listener() {}
 Listener::~Listener() {}

@@ -11,11 +11,12 @@ public:
 	~ScreenMenu();
     void init() override;
     void draw() const override;
-	void tick() override;
-    void handleEvent(SDL_Event &event) override;
-    void handleWidgetEvent(WidgetEvent event) override;
+	void handleEvent(SDL_Event &event) override;
 private:
-	std::vector<TextButton*> _buttons;
+	const Picture *_bg;
+	TextButton _newGameButton;
+	TextButton _CreditsButton;
+	TextButton _QuitButton;
 };
 
 #endif // SCREENMENU_H

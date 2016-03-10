@@ -4,48 +4,41 @@
 #include <iostream>
 
 ScreenMenu::ScreenMenu() {}
-
-ScreenMenu::~ScreenMenu() {
-	for (size_t i = 0; i < _buttons.size(); ++i) {
-		delete _buttons[i];
-	}
-}
+ScreenMenu::~ScreenMenu() {}
 
 void ScreenMenu::init() {
 	_bg = ResourcesManager::getInstance().getPicture(TP_BackgroundMenu);
 
-	_buttons.push_back(new TextButton());
-	_buttons.push_back(new TextButton());
-	_buttons.push_back(new TextButton());
+	_newGameButton.setListener(this);
+	_newGameButton.setPictureActive(TP_Button);
+	_newGameButton.setPicturePressed(TP_ButtonPressed);
+	_newGameButton.setX(Config::WindowW / 2 - _newGameButton.getW() / 2);
+	_newGameButton.setY(15 + 0 * (_newGameButton.getH() + 5));
+	_newGameButton.setWidgetEvent(BE_NewGame);
+	_newGameButton.setText("New Game");
 
-	for (size_t i = 0; i < _buttons.size(); ++i) {
-		_buttons[i]->setListener(this);
-		_buttons[i]->setPictureActive(TP_Button);
-		_buttons[i]->setPicturePressed(TP_ButtonPressed);
-		_buttons[i]->setX(Config::WindowW / 2 - _buttons[i]->getW() / 2);
-		_buttons[i]->setY(15 + i * (_buttons[i]->getH() + 5));
-	}
+	_CreditsButton.setListener(this);
+	_CreditsButton.setPictureActive(TP_Button);
+	_CreditsButton.setPicturePressed(TP_ButtonPressed);
+	_CreditsButton.setX(Config::WindowW / 2 - _newGameButton.getW() / 2);
+	_CreditsButton.setY(15 + 1 * (_CreditsButton.getH() + 5));
+	_CreditsButton.setWidgetEvent(BE_Credits);
+	_CreditsButton.setText("Credits");
 
-	_buttons[0]->setWidgetEvent(BE_NewGame);
-	_buttons[0]->setText("New Game");
-
-	_buttons[1]->setWidgetEvent(BE_Credits);
-	_buttons[1]->setText("Credits");
-
-	_buttons[2]->setWidgetEvent(BE_Quit);
-	_buttons[2]->setText("Quit");
+	_QuitButton.setListener(this);
+	_QuitButton.setPictureActive(TP_Button);
+	_QuitButton.setPicturePressed(TP_ButtonPressed);
+	_QuitButton.setX(Config::WindowW / 2 - _newGameButton.getW() / 2);
+	_QuitButton.setY(15 + 2 * (_QuitButton.getH() + 5));
+	_QuitButton.setWidgetEvent(BE_Quit);
+	_QuitButton.setText("Quit");
 }
 
 void ScreenMenu::draw() const {
-	_bg->draw(0, 0);
-	for (TextButton *button : _buttons) {
-		button->draw();
-	}
-	_fps.draw();
-}
-
-void ScreenMenu::tick() {
-	_fps.calculateFps();
+	_bg->draw();
+	_newGameButton.draw();
+	_CreditsButton.draw();
+	_QuitButton.draw();
 }
 
 void ScreenMenu::handleEvent(SDL_Event &event) {
@@ -55,29 +48,9 @@ void ScreenMenu::handleEvent(SDL_Event &event) {
         }
 	} else {
 		if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
-			for (TextButton *button : _buttons) {
-				button->handleEvent(event);
-			}
+			_newGameButton.handleEvent(event);
+			_CreditsButton.handleEvent(event);
+			_QuitButton.handleEvent(event);
         }
-    }
-}
-
-void ScreenMenu::handleWidgetEvent(WidgetEvent event) {
-	switch (event._baseEvent) {
-    case BE_NewGame:
-		std::cout << "New Game pressed\n";
-		_nextScreen = SS_Game;
-		break;
-	case BE_Credits:
-		std::cout << "Credits pressed\n";
-		_nextScreen = SS_Credits;
-		break;
-	case BE_Quit:
-		std::cout << "Quit pressed\n";
-		_nextScreen = SS_Quit;
-		break;
-	default:
-		std::cout << "unknown event\n";
-		break;
-    }
+	}
 }

@@ -20,14 +20,15 @@ public:
 	int             getW() const;
 	int             getH() const;
     void            free();
-	void			draw(int x, int y) const;
+	void			draw(int x = 0, int y = 0) const;
 protected:
 	std::string _resource;
     SDL_Texture *_texture;
 	int			_xOffset;
 	int			_yOffset;
     int         _w;
-    int         _h;
+	int         _h;
+	bool		_exist;
 };
 
 class TextPicture : public Picture {
