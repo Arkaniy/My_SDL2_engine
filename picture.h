@@ -14,14 +14,13 @@ public:
 	void			setYOffset(int y);
 	void			setW(int w);
 	void			setH(int h);
-	void			setExist(bool exist);
 
 	std::string		getResource() const;
     SDL_Texture*    getTexture() const;
 	int             getW() const;
 	int             getH() const;
     void            free();
-	void			draw(int x, int y) const;
+	void			draw(int x = 0, int y = 0) const;
 protected:
 	std::string _resource;
     SDL_Texture *_texture;

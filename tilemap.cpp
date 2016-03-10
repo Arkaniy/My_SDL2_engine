@@ -47,22 +47,6 @@ void Tile::setPicture(const TilePicture tilePicture) {
 	_picture = ResourcesManager::getInstance().getPicture(tilePicture);
 }
 
-void Tile::setI(int i) {
-	_i = i;
-}
-
-void Tile::setJ(int j) {
-	_j = j;
-}
-
-void Tile::setX(int x) {
-	_x = x;
-}
-
-void Tile::setY(int y) {
-	_y = y;
-}
-
 TileType Tile::getTileType() const {
 	return _tileType;
 }
@@ -101,16 +85,23 @@ TileMap::TileMap() {
 	srand(time(0));
 	_Size = Config::SizeTileMap;
 	_tiles.resize(_Size);
+	_centerUnit = nullptr;
+	_scroller.init(50, Config::WindowW-50, 100, Config::WindowH-50, 2);
+	_offsetX = 0;
+	_offsetY = 0;
+	_centerX = 0;
+	_centerY = 0;
+
 	int i = 0;
 	for (auto& subVector : _tiles) {
 		int j = 0;
 		subVector.resize(_Size);
 		for (Tile& tile : subVector) {
 			tile.setTileType(TT_Passable);
-			tile.setI(i);
-			tile.setJ(j);
-			tile.setX((j - i) * 32);
-			tile.setY((i + j) * 16);
+			tile._i = i;
+			tile._j = j;
+			tile._x = (j - i) * 32;
+			tile._y = (i + j) * 16;
 			++j;
 		}
 		++i;
@@ -126,18 +117,31 @@ void TileMap::draw() const {
 	}
 }
 
+void TileMap::handleEvent(SDL_Event &event) {
+	switch (event.type) {
+	case SDL_MOUSEBUTTONDOWN: {
+		int cx = _scroller.getCenterX();
+		int cy = _scroller.getCenterY();
 
-#include <thread>
-bool TileMap::handleEvent(SDL_Event &event) {
-	bool handled = false;
-	if (event.type == SDL_MOUSEBUTTONDOWN) {
-		//int i = _centerUnit->getI() + (-2 * event.motion.x + Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
-		//int j = _centerUnit->getJ() + ( 2 * event.motion.x - Config::WindowW + 4 * event.motion.y - 2 * Config::WindowH) / 128.;
-		int i = 0, j = 0;
-		std::cout << "Handled in" << i << ", " << j << std::endl;
-		handled = true;
+		int i = floor((-2*event.button.x + Config::WindowW + 4*event.button.y - 2*Config::WindowH - 2*cx + 4*cy) / 128. + 0.5);
+		int j = floor(( 2*event.button.x - Config::WindowW + 4*event.button.y - 2*Config::WindowH + 2*cx + 4*cy) / 128. - 1.5);
+
+		std::cout << "Handled in  " << i << ", " << j << std::endl;
+		break;
 	}
-	return handled;
+	case SDL_MOUSEMOTION:
+		_scroller.scroll(event.button.x, event.button.y);
+		break;
+	case SDL_KEYDOWN:
+		if (event.key.keysym.sym == SDLK_q) {
+			_cen = true;
+		} else {
+			if (event.key.keysym.sym == SDLK_ESCAPE) {
+				_listener->handleWidgetEvent(BE_Credits);
+			}
+		}
+		break;
+	}
 }
 
 void TileMap::update() {
@@ -186,13 +190,20 @@ void TileMap::update() {
 
 //	int centerX = _centerUnit->getX() - Config::WindowW / 2 + 32 - dx * 32;
 //	int centerY = _centerUnit->getY() - Config::WindowH / 2 + 32 - dy * 16;
-	int centerX = 0, centerY = 0;
+
+	if (_cen) {
+		_scroller.setCenter(_tiles[0][0]._x, _tiles[0][0]._y);
+		_cen = false;
+	}
+
 	for (auto& subVector : _tiles) {
 		for (Tile& tile : subVector) {
-			tile.setX(tile.getX() - centerX);
-			tile.setY(tile.getY() - centerY);
+			tile._x -= _scroller.getDx();
+			tile._y -= _scroller.getDy();
 		}
 	}
+
+	_scroller.updateCenter();
 }
 
 Tile *TileMap::getTile(int i, int j) {

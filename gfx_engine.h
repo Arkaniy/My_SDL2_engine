@@ -3,7 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "picture.h"
+
+class Picture;
 
 class GfxEngine {
 public:
@@ -13,12 +14,12 @@ public:
 
     void                startFrame();
     void                endFrame();
-	void                draw(const Picture *picture, int x, int y, const SDL_Rect * const clip = nullptr);
+	void                draw(const Picture * const picture, int x, int y, const SDL_Rect * const clip = nullptr);
 
-    SDL_Renderer* getRenderer() const;
-//private:
+	SDL_Renderer* getRenderer() const;
+private:
     GfxEngine();
-//private:
+private:
     SDL_Window      *_window;
     SDL_Renderer    *_renderer;
 };

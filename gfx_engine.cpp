@@ -1,6 +1,7 @@
 #include "gfx_engine.h"
 #include "helper.h"
 #include "config.h"
+#include "picture.h"
 #include <SDL2/SDL_image.h>
 
 GfxEngine::GfxEngine() {
@@ -24,7 +25,7 @@ bool GfxEngine::init() {
         Helper::logError("create window");
         result = false;
     }
-	_renderer = SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	_renderer = SDL_CreateRenderer(_window, 0, SDL_RENDERER_ACCELERATED/* | SDL_RENDERER_PRESENTVSYNC*/);
     if (_renderer == nullptr) {
         Helper::logError("create render");
         result = false;
@@ -53,7 +54,7 @@ void GfxEngine::startFrame() {
     SDL_RenderClear(_renderer);
 }
 
-void GfxEngine::draw(const Picture *picture, int x, int y, const SDL_Rect * const clip) {
+void GfxEngine::draw(const Picture* const picture, int x, int y, const SDL_Rect * const clip) {
 	SDL_Rect rect = { x, y, picture->getW(), picture->getH() };
     if (clip != nullptr) {
         rect.w = clip->w;

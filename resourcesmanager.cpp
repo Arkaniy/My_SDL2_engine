@@ -10,14 +10,14 @@ ResourcesManager& ResourcesManager::getInstance() {
 ResourcesManager::ResourcesManager() {}
 
 void ResourcesManager::unload() {
-    for (const std::pair<std::string, TTF_Font*> pair : _fonts) {
-        TTF_CloseFont(pair.second);
+	for (std::pair<const FontCollection, TTF_Font*> pair : _fonts) {
+		TTF_CloseFont(pair.second);
     }
 	for (std::pair<TilePicture, Picture> pair : _pictures) {
         pair.second.free();
 		auto res = _pictures.find(pair.first);
 		while(res != _pictures.end()) {
-			res->second.setExist(false);
+			//res->second.setExist(false); // maybe noneed in future
 			res = std::find_if(++res, _pictures.end(), [pair](std::pair<TilePicture, Picture> pair2){
 				return pair.second.getResource() == pair2.second.getResource();
 			});
@@ -26,8 +26,8 @@ void ResourcesManager::unload() {
 }
 
 void ResourcesManager::loadResources() {
-    loadFont("resources/font.ttf");
-	loadFont("resources/font1.ttf");
+	loadFont("resources/font.ttf", FC_Main);
+	loadFont("resources/font1.ttf", FC_FPS);
 	loadPicture("resources/bg_picture.png", TP_BackgroundMenu, 0, 0);
 	loadPicture("resources/bg_wait.png", TP_BackgroundWait, 0, 0);
 	loadPicture("resources/button.png", TP_Button, 0, 0);
@@ -38,6 +38,8 @@ void ResourcesManager::loadResources() {
 	loadPicture("resources/png/walkcycle/BODY_skeleton.png", TP_Man1, 0, 64);
 	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManLeft, 9, 64);
 	loadAnimation("resources/png/walkcycle/BODY_skeleton.png", TA_ManRight, 9, 192);
+
+	loadPicture("resources/png/123.png", TP_Window, 0, 0);
 //	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man, 0, 128);
 //	loadPicture("resources/png/walkcycle/BODY_male.png", TP_Man1, 0, 64);
 //	loadAnimation("resources/png/walkcycle/BODY_male.png", TA_ManLeft, 9, 64);
@@ -54,13 +56,13 @@ void ResourcesManager::loadAnimation(std::string name, TileAnimation tileAnimati
 	_animations[tileAnimation] = animation;
 }
 
-void ResourcesManager::loadFont(std::string name) {
+void ResourcesManager::loadFont(std::string name, FontCollection fontCollection) {
 	TTF_Font *font = TTF_OpenFont(name.c_str(), 20);
     if (font == NULL) {
         Helper::logError("open font");
         return;
     }
-	_fonts[name] = font;
+	_fonts[fontCollection] = font;
 }
 
 void ResourcesManager::loadPicture(std::string name, TilePicture tilePicture, int xOffset, int yOffset) {
@@ -101,7 +103,10 @@ Picture *ResourcesManager::getPicture(const std::string resource) {
 	return &it->second;
 }
 
-TTF_Font* ResourcesManager::getFont(const std::string &name) const {
-    auto it = _fonts.find(name);
-    return it->second;
+TTF_Font* ResourcesManager::getFont(const FontCollection fontCollection) {
+	auto it = _fonts.find(fontCollection);
+	if (it == _fonts.end()) {
+		return nullptr;
+	}
+	return it->second;
 }

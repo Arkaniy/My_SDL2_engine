@@ -5,20 +5,18 @@
 #include <vector>
 #include "enums.h"
 #include "widget.h"
+#include "scroller.h"
 
 class Unit;
 class LandOverlay;
 class Tile {
+	friend class TileMap;
 public:
 	Tile();
 	~Tile();
 	void		setTileType(TileType tileType);
 	void		setLandOverlay(LandOverlay *landOverlay);
 	void		setPicture(const TilePicture tilePicture);
-	void		setI(int i);
-	void		setJ(int j);
-	void		setX(int x);
-	void		setY(int y);
 	TileType	getTileType() const;
 	LandOverlay*getLandOverlay();
 	int			getI() const;
@@ -41,8 +39,8 @@ class TileMap : public Widget {
 public:
 	TileMap();
 	void draw() const override;
-	bool handleEvent(SDL_Event &event) override;
-	void update();
+	void handleEvent(SDL_Event &event) override;
+	void update(); // make center on _centerUnit after every frame
 	Tile *getTile(int i, int j);
 	Tile *getRandomTile();
 	bool isInRange(int i, int j) const;
@@ -51,6 +49,13 @@ private:
 	int								_Size;
 	std::vector<std::vector<Tile>>	_tiles;
 	Unit							*_centerUnit;
+	Scroller						_scroller;
+	int								_offsetX;
+	int								_offsetY;
+	int								_centerX;
+	int								_centerY;
+
+	bool _cen = false;
 };
 
 #endif // TILEMAP_H

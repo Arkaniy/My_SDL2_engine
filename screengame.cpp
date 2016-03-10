@@ -7,41 +7,34 @@ ScreenGame::ScreenGame() {}
 ScreenGame::~ScreenGame() {}
 
 void ScreenGame::init() {
-	//_bg = ResourcesManager::getInstance().getPicture();
-	_gameUi.setListener(this);
+	//_gameUi.setListener(this);
 	_tileMap.setListener(this);
+
+	_windows.push_back(PopupWindow());
+	_windows.back().setCoordinates(50,50);
 }
 
 void ScreenGame::draw() const {
-	//_bg->draw(0, 0);
 	_tileMap.draw();
-	_gameUi.draw();
-	_fps.draw();
+	//_gameUi.draw();
+	for(const PopupWindow& window : _windows) {
+		window.draw();
+	}
 }
 
-bool ScreenGame::handleEvent(SDL_Event &event) {
-		if (event.key.keysym.sym == SDLK_ESCAPE) {
-			_nextScreen = SS_Menu;
-		} else {
-			_gameUi.handleEvent(event);
-			_tileMap.handleEvent(event);
+void ScreenGame::handleEvent(SDL_Event &event) {
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		for(PopupWindow& window : _windows) {
+			window.handleEvent(event);
 		}
+	} else {
+		_windows.back().handleEvent(event);
+	}
+	_tileMap.handleEvent(event);
 }
 
 void ScreenGame::handleWidgetEvent(WidgetEvent event) {
-	switch (event._baseEvent) {
-	case BE_Menu:
-		std::cout << "Menu pressed\n";
-		_nextScreen = SS_Menu;
-		break;
-	case BE_Quit:
-		std::cout << "Quit pressed\n";
-		_nextScreen = SS_Quit;
-		break;
-	default:
-		std::cout << "unknown event\n";
-		break;
-	}
+	Screen::handleWidgetEvent(event);
 }
 
 void ScreenGame::update() {

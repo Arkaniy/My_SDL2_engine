@@ -6,7 +6,7 @@
 FpsCounter::FpsCounter() {
     _currentFps     = 0;
     _currentFrame   = 0;
-	_text.setFont(ResourcesManager::getInstance().getFont("resources/font1.ttf"));
+	_text.setFont(ResourcesManager::getInstance().getFont(FC_FPS));
 	_text.setXOffset(5);
 	_text.setYOffset(5);
 }

@@ -11,7 +11,7 @@ int App::execute() {
     initVideo();
     loadResources();
 
-	_nextScreen = SS_Game;
+	_nextScreen = SS_Menu;
     while (_nextScreen != SS_Quit) {
         switch(_nextScreen) {
 		case SS_Game:

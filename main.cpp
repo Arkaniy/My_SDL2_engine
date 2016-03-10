@@ -2,6 +2,7 @@
 #include <iostream>
 
 int main() {
+
 	int result = 1;
 	try {
 		App app;

@@ -24,7 +24,6 @@ void Picture::load(std::string name) {
         Helper::logError("load image");
         return;
     }
-    //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0x00, 0xFF));
     _texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     if (_texture == nullptr) {
         Helper::logError("create texture");
@@ -59,10 +58,6 @@ void Picture::setW(int w) {
 
 void Picture::setH(int h) {
 	_h = h;
-}
-
-void Picture::setExist(bool exist) {
-	_exist = exist;
 }
 
 std::string Picture::getResource() const {

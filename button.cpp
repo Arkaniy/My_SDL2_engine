@@ -4,7 +4,6 @@
 #include "screen.h"
 
 Button::Button() {
-	_widgetEvent._baseEvent = BE_TOTAL;
 	_listener = nullptr;
     _x = 0;
     _y = 0;
@@ -17,11 +16,9 @@ void Button::draw() const {
 	_pictureCurrent->draw(_x, _y);
 }
 
-bool Button::handleEvent(SDL_Event &event) {
-	bool handled = false;
+void Button::handleEvent(SDL_Event &event) {
 	if (event.button.x >= _x && event.button.x <= _x + _pictureNormal->getW() &&
 			event.button.y >= _y && event.button.y <= _y + _pictureNormal->getH()) {
-		handled = true;
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 			_pictureCurrent = _picturePressed;
 		} else {
@@ -31,7 +28,6 @@ bool Button::handleEvent(SDL_Event &event) {
 	} else {
 		_pictureCurrent = _pictureNormal;
 	}
-	return handled;
 }
 
 void Button::setWidgetEvent(const WidgetEvent widgetEvent) {
@@ -64,7 +60,7 @@ int Button::getH() const {
 }
 
 TextButton::TextButton() {
-	_textPicture.setFont(ResourcesManager::getInstance().getFont("resources/font.ttf"));
+	_textPicture.setFont(ResourcesManager::getInstance().getFont(FC_Main));
 	_text = "";
 }
 
